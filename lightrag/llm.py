@@ -11,6 +11,9 @@ import aiohttp
 import numpy as np
 import ollama
 import torch
+from google import genai
+import google.generativeai as genai_embed
+
 from openai import (
     AsyncOpenAI,
     APIConnectionError,
@@ -105,6 +108,61 @@ async def openai_complete_if_cache(
         if r"\u" in content:
             content = safe_unicode_decode(content.encode("utf-8"))
         return content
+
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type(
+        (RateLimitError, APIConnectionError, APITimeoutError)
+    ),
+)
+async def gemini_model_if_cache(
+    model: str,  # 直接传递模型名称
+    prompt: str,
+    system_prompt: str = None,
+    history_messages: list = [],
+    **kwargs,
+) -> Union[str, AsyncIterator[str]]:
+    """使用 Gemini 模型生成内容，支持流式和非流式输出，并利用缓存."""
+
+    stream = True if kwargs.get("stream") else False
+    
+    api_key = kwargs.get("api_key")  # 替换为你的 API 密钥
+    genai_client = genai.Client(api_key=api_key)
+   
+    contents_text = ""
+    for message in history_messages:
+        contents_text += f"{message['role']}: {message['content']}\n"
+    contents_text += f"user: {prompt}"
+    if system_prompt:
+        contents_text += f"system: {system_prompt}\n"
+
+    contents = [contents_text]
+    
+    if stream:
+        async def inner():
+            try:
+                for chunk in genai_client.models.generate_content_stream(
+                    model=model,  # 传递模型名称
+                    contents=contents,
+                ):
+                    yield chunk.text
+            except Exception as e:
+                print(f"流式生成发生错误: {e}")
+                yield f"Error: {e}" #返回错误信息
+        return inner()
+    else:
+        try:
+            response = genai_client.models.generate_content(  # 假设有异步版本
+                model=model,  # 传递模型名称
+                contents=contents,
+            )
+            print(response.text)
+            return response.text
+        except Exception as e:
+            print(f"非流式生成发生错误: {e}")
+            return f"Error: {e}"
 
 
 @retry(
@@ -572,6 +630,23 @@ async def openai_complete(
         history_messages=history_messages,
         **kwargs,
     )
+
+
+async def gemini_complete(
+    prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
+) -> Union[str, AsyncIterator[str]]:
+    keyword_extraction = kwargs.pop("keyword_extraction", None)
+    if keyword_extraction:
+        kwargs["response_format"] = "json"
+    model_name = kwargs["hashing_kv"].global_config["llm_model_name"]
+    return await gemini_model_if_cache(
+        model_name,
+        prompt,
+        system_prompt=system_prompt,
+        history_messages=history_messages,
+        **kwargs,
+    )
+
 
 
 async def gpt_4o_complete(
@@ -1152,6 +1227,13 @@ async def ollama_embed(texts: list[str], embed_model, **kwargs) -> np.ndarray:
     data = ollama_client.embed(model=embed_model, input=texts)
     return data["embeddings"]
 
+async def gemini_embed(texts: list[str], model, api_key) -> np.ndarray:
+    genai_embed.configure(api_key=api_key)
+    data = genai_embed.embed_content(
+        model=model, 
+        content=texts
+        )
+    return np.array(data["embedding"])
 
 async def lollms_embed(
     texts: List[str], embed_model=None, base_url="http://localhost:9600", **kwargs
