@@ -326,6 +326,7 @@ class LightRAG:
             self.ainsert(string_or_strings, split_by_character, split_by_character_only)
         )
 
+    # 将文档根据长度分段
     async def ainsert(
         self, string_or_strings, split_by_character=None, split_by_character_only=False
     ):
@@ -415,8 +416,9 @@ class LightRAG:
                     try:
                         # Store chunks in vector database
                         await self.chunks_vdb.upsert(chunks)
-
+                        
                         # Extract and store entities and relationships
+                        logger.info(f"Extracting entities and relationships from....")
                         maybe_new_kg = await extract_entities(
                             chunks,
                             knowledge_graph_inst=self.chunk_entity_relation_graph,
@@ -582,7 +584,7 @@ class LightRAG:
             # Insert entities into knowledge graph
             all_entities_data = []
             for entity_data in custom_kg.get("entities", []):
-                entity_name = f'"{entity_data["entity_name"].upper()}"'
+                entity_name = f'"{entity_data["entity_name"].lower()}"'
                 entity_type = entity_data.get("entity_type", "UNKNOWN")
                 description = entity_data.get("description", "No description provided")
                 # source_id = entity_data["source_id"]
@@ -612,8 +614,8 @@ class LightRAG:
             # Insert relationships into knowledge graph
             all_relationships_data = []
             for relationship_data in custom_kg.get("relationships", []):
-                src_id = f'"{relationship_data["src_id"].upper()}"'
-                tgt_id = f'"{relationship_data["tgt_id"].upper()}"'
+                src_id = f'"{relationship_data["src_id"].lower()}"'
+                tgt_id = f'"{relationship_data["tgt_id"].lower()}"'
                 description = relationship_data["description"]
                 keywords = relationship_data["keywords"]
                 weight = relationship_data.get("weight", 1.0)
@@ -766,7 +768,7 @@ class LightRAG:
         return loop.run_until_complete(self.adelete_by_entity(entity_name))
 
     async def adelete_by_entity(self, entity_name: str):
-        entity_name = f'"{entity_name.upper()}"'
+        entity_name = f'"{entity_name.lower()}"'
 
         try:
             await self.entities_vdb.delete_entity(entity_name)
@@ -1026,7 +1028,7 @@ class LightRAG:
                 - graph_data: Complete node data from the graph database
                 - vector_data: (optional) Data from the vector database
         """
-        entity_name = f'"{entity_name.upper()}"'
+        entity_name = f'"{entity_name.lower()}"'
 
         # Get information from the graph
         node_data = await self.chunk_entity_relation_graph.get_node(entity_name)
@@ -1079,8 +1081,8 @@ class LightRAG:
                 - graph_data: Complete edge data from the graph database
                 - vector_data: (optional) Data from the vector database
         """
-        src_entity = f'"{src_entity.upper()}"'
-        tgt_entity = f'"{tgt_entity.upper()}"'
+        src_entity = f'"{src_entity.lower()}"'
+        tgt_entity = f'"{tgt_entity.lower()}"'
 
         # Get information from the graph
         edge_data = await self.chunk_entity_relation_graph.get_edge(

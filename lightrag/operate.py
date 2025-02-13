@@ -129,10 +129,10 @@ async def _handle_single_entity_extraction(
     if len(record_attributes) < 4 or record_attributes[0] != '"entity"':
         return None
     # add this record as a node in the G
-    entity_name = clean_str(record_attributes[1].upper())
+    entity_name = clean_str(record_attributes[1].lower())
     if not entity_name.strip():
         return None
-    entity_type = clean_str(record_attributes[2].upper())
+    entity_type = clean_str(record_attributes[2].lower())
     entity_description = clean_str(record_attributes[3])
     entity_source_id = chunk_key
     return dict(
@@ -150,8 +150,8 @@ async def _handle_single_relationship_extraction(
     if len(record_attributes) < 5 or record_attributes[0] != '"relationship"':
         return None
     # add this record as edge
-    source = clean_str(record_attributes[1].upper())
-    target = clean_str(record_attributes[2].upper())
+    source = clean_str(record_attributes[1].lower())
+    target = clean_str(record_attributes[2].lower())
     edge_description = clean_str(record_attributes[3])
 
     edge_keywords = clean_str(record_attributes[4])
@@ -282,7 +282,6 @@ async def _merge_edges_then_upsert(
     )
 
     return edge_data
-
 
 async def extract_entities(
     chunks: dict[str, TextChunkSchema],
@@ -431,9 +430,12 @@ async def extract_entities(
             record_attributes = split_string_by_multi_markers(
                 record, [context_base["tuple_delimiter"]]
             )
+            
+            # 判断这个record是entity还是relationship
             if_entities = await _handle_single_entity_extraction(
                 record_attributes, chunk_key
             )
+            
             if if_entities is not None:
                 maybe_nodes[if_entities["entity_name"]].append(if_entities)
                 continue
@@ -456,6 +458,7 @@ async def extract_entities(
             end="",
             flush=True,
         )
+        
         return dict(maybe_nodes), dict(maybe_edges)
 
     results = []
@@ -587,7 +590,6 @@ async def kg_query(
     kw_prompt = kw_prompt_temp.format(query=query, examples=examples, language=language)
     result = await use_model_func(kw_prompt, keyword_extraction=True)
     logger.info("kw_prompt result:")
-    print(result)
     try:
         # json_text = locate_json_string_body_from_string(result) # handled in use_model_func
         match = re.search(r"\{.*\}", result, re.DOTALL)

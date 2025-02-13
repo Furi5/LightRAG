@@ -8,7 +8,7 @@ PROMPTS["DEFAULT_RECORD_DELIMITER"] = "##"
 PROMPTS["DEFAULT_COMPLETION_DELIMITER"] = "<|COMPLETE|>"
 PROMPTS["process_tickers"] = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 
-PROMPTS["DEFAULT_ENTITY_TYPES"] = ["organization", "person", "geo", "event", "category"]
+PROMPTS["DEFAULT_ENTITY_TYPES"] = ["disease","gene","organism","omics type","method","region","cell type","group"]
 
 PROMPTS["entity_extraction"] = """-Goal-
 Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
@@ -52,77 +52,64 @@ Output:
 """
 
 PROMPTS["entity_extraction_examples"] = [
-    """Example 1:
-
-Entity_types: [person, technology, mission, organization, location]
+"""Example 1:
+Entity_types: ["disease","gene","organism","omics type","method","region","cell type","group"]
 Text:
-while Alex clenched his jaw, the buzz of frustration dull against the backdrop of Taylor's authoritarian certainty. It was this competitive undercurrent that kept him alert, the sense that his and Jordan's shared commitment to discovery was an unspoken rebellion against Cruz's narrowing vision of control and order.
-
-Then Taylor did something unexpected. They paused beside Jordan and, for a moment, observed the device with something akin to reverence. “If this tech can be understood..." Taylor said, their voice quieter, "It could change the game for us. For all of us.”
-
-The underlying dismissal earlier seemed to falter, replaced by a glimpse of reluctant respect for the gravity of what lay in their hands. Jordan looked up, and for a fleeting heartbeat, their eyes locked with Taylor's, a wordless clash of wills softening into an uneasy truce.
-
-It was a small transformation, barely perceptible, but one that Alex noted with an inward nod. They had all been brought here by different paths
+PMID: 19295912
+Title: Transcriptome analysis of synaptoneurosomes identifies neuroplasticity genes overexpressed in incipient Alzheimer's disease
+Abstract: In Alzheimer's disease (AD), early deficits in learning and memory are a consequence of synaptic modification induced by toxic beta-amyloid oligomers (oAbeta). To identify immediate molecular targets downstream of oAbeta binding, we prepared synaptoneurosomes from prefrontal cortex of control and incipient AD (IAD) patients, and isolated mRNAs for comparison of gene expression. This novel approach concentrates synaptic mRNA, thereby increasing the ratio of synaptic to somal mRNA and allowing discrimination of expression changes in synaptically localized genes. In IAD patients, global measures of cognition declined with increasing levels of dimeric Abeta (dAbeta). These patients also showed increased expression of neuroplasticity related genes, many encoding 3'UTR consensus sequences that regulate translation in the synapse. An increase in mRNA encoding the GluR2 subunit of the alpha-amino-3-hydroxy-5-methyl-4-isoxazole propionic acid receptor (AMPAR) was paralleled by elevated expression of the corresponding protein in IAD. These results imply a functional impact on synaptic transmission as GluR2, if inserted, maintains the receptors in a low conductance state. Some overexpressed genes may induce early deficits in cognition and others compensatory mechanisms, providing targets for intervention to moderate the response to dAbeta. 
 ################
 Output:
-("entity"{tuple_delimiter}"Alex"{tuple_delimiter}"person"{tuple_delimiter}"Alex is a character who experiences frustration and is observant of the dynamics among other characters."){record_delimiter}
-("entity"{tuple_delimiter}"Taylor"{tuple_delimiter}"person"{tuple_delimiter}"Taylor is portrayed with authoritarian certainty and shows a moment of reverence towards a device, indicating a change in perspective."){record_delimiter}
-("entity"{tuple_delimiter}"Jordan"{tuple_delimiter}"person"{tuple_delimiter}"Jordan shares a commitment to discovery and has a significant interaction with Taylor regarding a device."){record_delimiter}
-("entity"{tuple_delimiter}"Cruz"{tuple_delimiter}"person"{tuple_delimiter}"Cruz is associated with a vision of control and order, influencing the dynamics among other characters."){record_delimiter}
-("entity"{tuple_delimiter}"The Device"{tuple_delimiter}"technology"{tuple_delimiter}"The Device is central to the story, with potential game-changing implications, and is revered by Taylor."){record_delimiter}
-("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"Taylor"{tuple_delimiter}"Alex is affected by Taylor's authoritarian certainty and observes changes in Taylor's attitude towards the device."{tuple_delimiter}"power dynamics, perspective shift"{tuple_delimiter}7){record_delimiter}
-("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"Jordan"{tuple_delimiter}"Alex and Jordan share a commitment to discovery, which contrasts with Cruz's vision."{tuple_delimiter}"shared goals, rebellion"{tuple_delimiter}6){record_delimiter}
-("relationship"{tuple_delimiter}"Taylor"{tuple_delimiter}"Jordan"{tuple_delimiter}"Taylor and Jordan interact directly regarding the device, leading to a moment of mutual respect and an uneasy truce."{tuple_delimiter}"conflict resolution, mutual respect"{tuple_delimiter}8){record_delimiter}
-("relationship"{tuple_delimiter}"Jordan"{tuple_delimiter}"Cruz"{tuple_delimiter}"Jordan's commitment to discovery is in rebellion against Cruz's vision of control and order."{tuple_delimiter}"ideological conflict, rebellion"{tuple_delimiter}5){record_delimiter}
-("relationship"{tuple_delimiter}"Taylor"{tuple_delimiter}"The Device"{tuple_delimiter}"Taylor shows reverence towards the device, indicating its importance and potential impact."{tuple_delimiter}"reverence, technological significance"{tuple_delimiter}9){record_delimiter}
-("content_keywords"{tuple_delimiter}"power dynamics, ideological conflict, discovery, rebellion"){completion_delimiter}
+("entity"{tuple_delimiter}"Alzheimer's disease"{tuple_delimiter}"disease"{tuple_delimiter}"Transcriptome analysis of synaptoneurosomes identifies neuroplasticity genes overexpressed in incipient Alzheimer's disease"){record_delimiter}
+("entity"{tuple_delimiter}"GluR2"{tuple_delimiter}"gene"{tuple_delimiter}" These results imply a functional impact on synaptic transmission as GluR2, if inserted, maintains the receptors in a low conductance state."){record_delimiter}
+("entity"{tuple_delimiter}"Human"{tuple_delimiter}"organism"{tuple_delimiter}"These patients also showed increased expression of neuroplasticity related genes, many encoding 3'UTR consensus sequences that regulate translation in the synapse."){record_delimiter}
+("entity"{tuple_delimiter}"Transcriptome"{tuple_delimiter}"omics type"{tuple_delimiter}"Transcriptome analysis of synaptoneurosomes identifies neuroplasticity genes overexpressed in incipient Alzheimer's disease"){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"method"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"region"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"cell type"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"group"{tuple_delimiter}""){record_delimiter}
+("relationship"{tuple_delimiter}"Alzheimer's disease"{tuple_delimiter}"GluR2"{tuple_delimiter}"These results imply a functional impact on synaptic transmission as GluR2, if inserted, maintains the receptors in a low conductance state."{tuple_delimiter}"These results"{tuple_delimiter}){record_delimiter}
+("content_keywords"{tuple_delimiter}"Alzheimer's Disease, Transcriptome, gene expression"){completion_delimiter}
 #############################""",
-    """Example 2:
-
-Entity_types: [person, technology, mission, organization, location]
+"""Example 2:
+Entity_types: ["disease", "gene", "organism","omics type","method","region","cell type","group"]
 Text:
-They were no longer mere operatives; they had become guardians of a threshold, keepers of a message from a realm beyond stars and stripes. This elevation in their mission could not be shackled by regulations and established protocols—it demanded a new perspective, a new resolve.
-
-Tension threaded through the dialogue of beeps and static as communications with Washington buzzed in the background. The team stood, a portentous air enveloping them. It was clear that the decisions they made in the ensuing hours could redefine humanity's place in the cosmos or condemn them to ignorance and potential peril.
-
-Their connection to the stars solidified, the group moved to address the crystallizing warning, shifting from passive recipients to active participants. Mercer's latter instincts gained precedence— the team's mandate had evolved, no longer solely to observe and report but to interact and prepare. A metamorphosis had begun, and Operation: Dulce hummed with the newfound frequency of their daring, a tone set not by the earthly
-#############
+PMID: 29523845
+Title: Whole transcriptome profiling of Late-Onset Alzheimer's Disease patients provides insights into the molecular changes involved in the disease
+Abstract:Alzheimer's Disease (AD) is the most common cause of dementia affecting the elderly population worldwide. We have performed a comprehensive transcriptome profiling of Late-Onset AD (LOAD) patients using second generation sequencing technologies, identifying 2,064 genes, 47 lncRNAs and 4 miRNAs whose expression is specifically deregulated in the hippocampal region of LOAD patients. Moreover, analyzing the hippocampal, temporal and frontal regions from the same LOAD patients, we identify specific sets of deregulated miRNAs for each region, and we confirm that the miR-132/212 cluster is deregulated in each of these regions in LOAD patients, consistent with these miRNAs playing a role in AD pathogenesis. Notably, a luciferase assay indicates that miR-184 is able to target the 3'UTR NR4A2 - which is known to be involved in cognitive functions and long-term memory and whose expression levels are inversely correlated with those of miR-184 in the hippocampus. Finally, RNA editing analysis reveals a general RNA editing decrease in LOAD hippocampus, with 14 recoding sites significantly and differentially edited in 11 genes. Our data underline specific transcriptional changes in LOAD brain and provide an important source of information for understanding the molecular changes characterizing LOAD progression. 
+################
 Output:
-("entity"{tuple_delimiter}"Washington"{tuple_delimiter}"location"{tuple_delimiter}"Washington is a location where communications are being received, indicating its importance in the decision-making process."){record_delimiter}
-("entity"{tuple_delimiter}"Operation: Dulce"{tuple_delimiter}"mission"{tuple_delimiter}"Operation: Dulce is described as a mission that has evolved to interact and prepare, indicating a significant shift in objectives and activities."){record_delimiter}
-("entity"{tuple_delimiter}"The team"{tuple_delimiter}"organization"{tuple_delimiter}"The team is portrayed as a group of individuals who have transitioned from passive observers to active participants in a mission, showing a dynamic change in their role."){record_delimiter}
-("relationship"{tuple_delimiter}"The team"{tuple_delimiter}"Washington"{tuple_delimiter}"The team receives communications from Washington, which influences their decision-making process."{tuple_delimiter}"decision-making, external influence"{tuple_delimiter}7){record_delimiter}
-("relationship"{tuple_delimiter}"The team"{tuple_delimiter}"Operation: Dulce"{tuple_delimiter}"The team is directly involved in Operation: Dulce, executing its evolved objectives and activities."{tuple_delimiter}"mission evolution, active participation"{tuple_delimiter}9){completion_delimiter}
-("content_keywords"{tuple_delimiter}"mission evolution, decision-making, active participation, cosmic significance"){completion_delimiter}
+("entity"{tuple_delimiter}"Alzheimer's Disease"{tuple_delimiter}"disease"{tuple_delimiter}"Whole transcriptome profiling of Late-Onset Alzheimer's Disease patients provides insights into the molecular changes involved in the disease"){record_delimiter}
+("entity"{tuple_delimiter}"NR4A2"{tuple_delimiter}"gene"{tuple_delimiter}"Moreover, analyzing the hippocampal, temporal and frontal regions from the same LOAD patients, we identify specific sets of deregulated miRNAs for each region, and we confirm that the miR-132/212 cluster is deregulated in each of these regions in LOAD patients, consistent with these miRNAs playing a role in AD pathogenesis.Notably, a luciferase assay indicates that miR-184 is able to target the 3'UTR NR4A2 - which is known to be involved in cognitive functions and long-term memory and whose expression levels are inversely correlated with those of miR-184 in the hippocampus."){record_delimiter}
+("entity"{tuple_delimiter}"Human"{tuple_delimiter}"organism"{tuple_delimiter}"Whole transcriptome profiling of Late-Onset Alzheimer's Disease patients provides insights into the molecular changes involved in the disease"){record_delimiter}
+("entity"{tuple_delimiter}"Transcriptome"{tuple_delimiter}"omics type"{tuple_delimiter}"Whole transcriptome profiling of Late-Onset Alzheimer's Disease patients provides insights into the molecular changes involved in the disease"){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"method"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"hippocampal"{tuple_delimiter}"region"{tuple_delimiter}"Moreover, analyzing the hippocampal, temporal and frontal regions from the same LOAD patients, we identify specific sets of deregulated miRNAs for each region, and we confirm that the miR-132/212 cluster is deregulated in each of these regions in LOAD patients, consistent with these miRNAs playing a role in AD pathogenesis.Notably, a luciferase assay indicates that miR-184 is able to target the 3'UTR NR4A2 - which is known to be involved in cognitive functions and long-term memory and whose expression levels are inversely correlated with those of miR-184 in the hippocampus."){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"cell type"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"group"{tuple_delimiter}""){record_delimiter}
+("relationship"{tuple_delimiter}"Alzheimer's disease"{tuple_delimiter}"NR4A2"{tuple_delimiter}"Notably, a luciferase assay indicates that miR-184 is able to target the 3'UTR NR4A2 - which is known to be involved in cognitive functions and long-term memory and whose expression levels are inversely correlated with those of miR-184 in the hippocampus."{tuple_delimiter}"target to"{tuple_delimiter}){record_delimiter}
+("content_keywords"{tuple_delimiter}"Alzheimer's Disease, Transcriptome, gene expression"){completion_delimiter}
 #############################""",
-    """Example 3:
-
-Entity_types: [person, role, technology, organization, event, location, concept]
+"""Example 3:
+Entity_types: ["disease","gene","organism","omics type","method","region","cell type","group"]
 Text:
-their voice slicing through the buzz of activity. "Control may be an illusion when facing an intelligence that literally writes its own rules," they stated stoically, casting a watchful eye over the flurry of data.
-
-"It's like it's learning to communicate," offered Sam Rivera from a nearby interface, their youthful energy boding a mix of awe and anxiety. "This gives talking to strangers' a whole new meaning."
-
-Alex surveyed his team—each face a study in concentration, determination, and not a small measure of trepidation. "This might well be our first contact," he acknowledged, "And we need to be ready for whatever answers back."
-
-Together, they stood on the edge of the unknown, forging humanity's response to a message from the heavens. The ensuing silence was palpable—a collective introspection about their role in this grand cosmic play, one that could rewrite human history.
-
-The encrypted dialogue continued to unfold, its intricate patterns showing an almost uncanny anticipation
-#############
+PMID: 31042697
+Title: Single-cell transcriptomic analysis of Alzheimer's disease
+Abstract: Alzheimer's disease is a pervasive neurodegenerative disorder, the molecular complexity of which remains poorly understood. Here, we analysed 80,660 single-nucleus transcriptomes from the prefrontal cortex of 48 individuals with varying degrees of Alzheimer's disease pathology. Across six major brain cell types, we identified transcriptionally distinct subpopulations, including those associated with pathology and characterized by regulators of myelination, inflammation, and neuron survival. The strongest disease-associated changes appeared early in pathological progression and were highly cell-type specific, whereas genes upregulated at late stages were common across cell types and primarily involved in the global stress response. Notably, we found that female cells were overrepresented in disease-associated subpopulations, and that transcriptional responses were substantially different between sexes in several cell types, including oligodendrocytes. Overall, myelination-related processes were recurrently perturbed in multiple cell types, suggesting that myelination has a key role in Alzheimer's disease pathophysiology. Our single-cell transcriptomic resource provides a blueprint for interrogating the molecular and cellular basis of Alzheimer's disease. 
+################
 Output:
-("entity"{tuple_delimiter}"Sam Rivera"{tuple_delimiter}"person"{tuple_delimiter}"Sam Rivera is a member of a team working on communicating with an unknown intelligence, showing a mix of awe and anxiety."){record_delimiter}
-("entity"{tuple_delimiter}"Alex"{tuple_delimiter}"person"{tuple_delimiter}"Alex is the leader of a team attempting first contact with an unknown intelligence, acknowledging the significance of their task."){record_delimiter}
-("entity"{tuple_delimiter}"Control"{tuple_delimiter}"concept"{tuple_delimiter}"Control refers to the ability to manage or govern, which is challenged by an intelligence that writes its own rules."){record_delimiter}
-("entity"{tuple_delimiter}"Intelligence"{tuple_delimiter}"concept"{tuple_delimiter}"Intelligence here refers to an unknown entity capable of writing its own rules and learning to communicate."){record_delimiter}
-("entity"{tuple_delimiter}"First Contact"{tuple_delimiter}"event"{tuple_delimiter}"First Contact is the potential initial communication between humanity and an unknown intelligence."){record_delimiter}
-("entity"{tuple_delimiter}"Humanity's Response"{tuple_delimiter}"event"{tuple_delimiter}"Humanity's Response is the collective action taken by Alex's team in response to a message from an unknown intelligence."){record_delimiter}
-("relationship"{tuple_delimiter}"Sam Rivera"{tuple_delimiter}"Intelligence"{tuple_delimiter}"Sam Rivera is directly involved in the process of learning to communicate with the unknown intelligence."{tuple_delimiter}"communication, learning process"{tuple_delimiter}9){record_delimiter}
-("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"First Contact"{tuple_delimiter}"Alex leads the team that might be making the First Contact with the unknown intelligence."{tuple_delimiter}"leadership, exploration"{tuple_delimiter}10){record_delimiter}
-("relationship"{tuple_delimiter}"Alex"{tuple_delimiter}"Humanity's Response"{tuple_delimiter}"Alex and his team are the key figures in Humanity's Response to the unknown intelligence."{tuple_delimiter}"collective action, cosmic significance"{tuple_delimiter}8){record_delimiter}
-("relationship"{tuple_delimiter}"Control"{tuple_delimiter}"Intelligence"{tuple_delimiter}"The concept of Control is challenged by the Intelligence that writes its own rules."{tuple_delimiter}"power dynamics, autonomy"{tuple_delimiter}7){record_delimiter}
-("content_keywords"{tuple_delimiter}"first contact, control, communication, cosmic significance"){completion_delimiter}
+("entity"{tuple_delimiter}"Alzheimer's Disease"{tuple_delimiter}"disease"{tuple_delimiter}"Single-cell transcriptomic analysis of Alzheimer's disease"){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"gene"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"organism"{tuple_delimiter}"Whole transcriptome profiling of Late-Onset Alzheimer's Disease patients provides insights into the molecular changes involved in the disease"){record_delimiter}
+("entity"{tuple_delimiter}"Transcriptome"{tuple_delimiter}"omics type"{tuple_delimiter}"Single-cell transcriptomic analysis of Alzheimer's disease"){record_delimiter}
+("entity"{tuple_delimiter}"Single-cell"{tuple_delimiter}"method"{tuple_delimiter}"Single-cell transcriptomic analysis of Alzheimer's disease"){record_delimiter}
+("entity"{tuple_delimiter}"brain"{tuple_delimiter}"region"{tuple_delimiter}"Moreover, analyzing the hippocampal, temporal and frontal regions from the same LOAD patients, we identify specific sets of deregulated miRNAs for each region, and we confirm that the miR-132/212 cluster is deregulated in each of these regions in LOAD patients, consistent with these miRNAs playing a role in AD pathogenesis.Notably, a luciferase assay indicates that miR-184 is able to target the 3'UTR NR4A2 - which is known to be involved in cognitive functions and long-term memory and whose expression levels are inversely correlated with those of miR-184 in the hippocampus."){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"cell type"{tuple_delimiter}""){record_delimiter}
+("entity"{tuple_delimiter}"UNKNOWN"{tuple_delimiter}"group"{tuple_delimiter}""){record_delimiter}
+("content_keywords"{tuple_delimiter}"Alzheimer's Disease, Transcriptome, gene expression"){completion_delimiter}
 #############################""",
 ]
+
 
 PROMPTS[
     "summarize_entity_descriptions"

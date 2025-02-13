@@ -4,16 +4,24 @@ from lightrag.utils import xml_to_json
 from neo4j import GraphDatabase
 
 # Constants
-WORKING_DIR = "./dickens"
+WORKING_DIR = "./home/jovyan/my_code/RAG/output_deepseek_r1_7b-kg"
 BATCH_SIZE_NODES = 500
 BATCH_SIZE_EDGES = 100
 
 # Neo4j connection credentials
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USERNAME = "neo4j"
-NEO4J_PASSWORD = "your_password"
+# NEO4J_URI = "bolt://localhost:7687"
+NEO4J_USERNAME = "fuliww12@gmail.com"
+NEO4J_PASSWORD = "Fuli556600!"
 
+from neo4j import GraphDatabase
 
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+NEO4J_URI = "neo4j+s://21ff2e47.databases.neo4j.io"
+AUTH = (NEO4J_USERNAME, NEO4J_PASSWORD)
+
+with GraphDatabase.driver(NEO4J_URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+    
 def convert_xml_to_json(xml_path, output_path):
     """Converts XML file to JSON and saves the output."""
     if not os.path.exists(xml_path):

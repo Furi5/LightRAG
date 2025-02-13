@@ -158,7 +158,6 @@ async def gemini_model_if_cache(
                 model=model,  # 传递模型名称
                 contents=contents,
             )
-            print(response.text)
             return response.text
         except Exception as e:
             print(f"非流式生成发生错误: {e}")

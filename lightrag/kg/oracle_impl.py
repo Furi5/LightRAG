@@ -305,7 +305,7 @@ class OracleVectorDBStorage(BaseVectorStorage):
         embeddings = await self.embedding_func([query])
         embedding = embeddings[0]
         # 转换精度
-        dtype = str(embedding.dtype).upper()
+        dtype = str(embedding.dtype).lower()
         dimension = embedding.shape[0]
         embedding_string = "[" + ", ".join(map(str, embedding.tolist())) + "]"
 

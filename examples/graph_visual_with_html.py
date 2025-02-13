@@ -3,7 +3,7 @@ from pyvis.network import Network
 import random
 
 # Load the GraphML file
-G = nx.read_graphml("/home/jovyan/my_code/RAG/output_gemini_2/graph_chunk_entity_relation.graphml")
+G = nx.read_graphml("/home/jovyan/my_code/RAG/output_deepseek_r1_7b/graph_chunk_entity_relation.graphml")
 
 # Create a Pyvis network
 net = Network(height="100vh", notebook=True)
